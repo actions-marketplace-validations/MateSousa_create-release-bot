@@ -222,7 +222,7 @@ func HasPendingLabel(pr *github.PullRequest) bool {
 
 func ParsePullRequestEvent(pullRequestEvent string) (*github.PullRequestEvent, error) {
 	// Read the event payload from the env vars
-	payloadEnv := os.Getenv(pullRequestEvent)
+	payloadEnv := pullRequestEvent
 	if payloadEnv == "" {
 		return nil, fmt.Errorf("no payload found for event %s", pullRequestEvent)
 	}
