@@ -22,7 +22,6 @@ func LoadEnv() (env Env, err error) {
 		BaseBranch:   os.Getenv("INPUT_BASE_BRANCH"),
 		TargetBranch: os.Getenv("INPUT_TARGET_BRANCH"),
 		Token:        os.Getenv("INPUT_GITHUB_TOKEN"),
-		GithubEvent:  nil,
 	}
 
 	// validate config struct
@@ -40,9 +39,6 @@ func LoadEnv() (env Env, err error) {
 	}
 	if env.Token == "" {
 		return env, fmt.Errorf("missing github token")
-	}
-	if env.GithubEvent == nil {
-		return env, fmt.Errorf("missing github event")
 	}
 
 	return env, nil
