@@ -40,7 +40,7 @@ func PREvent(client *github.Client, env initializers.Env, event *github.PullRequ
 				return err
 			}
 			// Create a new release
-			newRelease, err := CreateNewRelease(client, env, newReleaseTag, *event.PullRequest.Head.SHA)
+			newRelease, err := CreateNewRelease(client, env, newReleaseTag)
 			if err != nil {
 				return err
 			}
@@ -164,7 +164,7 @@ func CreateNewLatestReleaseTag(client *github.Client, env initializers.Env, last
 		latestReleaseTagMajorVersion, err := strconv.Atoi(latestReleaseTagSplit[0][1:])
 		if err != nil {
 			return "", err
-		}	
+		}
 
 		latestReleaseTagMinorVersion, err := strconv.Atoi(latestReleaseTagSplit[1])
 		if err != nil {
@@ -214,16 +214,16 @@ func CreateNewLatestReleaseTag(client *github.Client, env initializers.Env, last
 }
 
 // Create a new release
-func CreateNewRelease(client *github.Client, env initializers.Env, newReleaseTag string, lastCommitSHA string) (*github.RepositoryRelease, error) {
+func CreateNewRelease(client *github.Client, env initializers.Env, newReleaseTag string) (*github.RepositoryRelease, error) {
 	name := fmt.Sprintf("%s %s", releaseName, newReleaseTag)
 
 	newRelease, _, err := client.Repositories.CreateRelease(context.Background(), env.RepoOwner, env.RepoName, &github.RepositoryRelease{
-		TagName: &newReleaseTag,
-		Name:    &name,
-		TargetCommitish: &lastCommitSHA,
+		TagName:         &newReleaseTag,
+		Name:            &name,
+		TargetCommitish: github.String("master"),
 	})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error creating release mate: %v", err)
 	}
 
 	return newRelease, nil
