@@ -183,7 +183,7 @@ func CreateNewLatestReleaseTag(client *github.Client, env initializers.Env, last
 		},
 		Tagger: &github.CommitAuthor{
 			Name:  github.String("Create Release Action"),
-			Email: github.String(""),
+			Email: github.String("matessousa@outlook.com"),
 			Date:  &now,
 		},
 	})
