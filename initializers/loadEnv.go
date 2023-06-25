@@ -3,7 +3,6 @@ package initializers
 import (
 	"fmt"
 	"os"
-	"github.com/google/go-github/v33/github"
 )
 
 type Env struct {
