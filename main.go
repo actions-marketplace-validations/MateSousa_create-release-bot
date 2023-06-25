@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"os"
 	"strconv"
@@ -77,9 +78,15 @@ func main() {
 		os.Exit(1)
 	}
 
+	event, err := ParsePullRequestEvent(env.GithubEvent)
+	if err != nil {
+		fmt.Printf("error parsing event: %v", err)
+		os.Exit(1)
+	}
+
 	fmt.Printf("repo owner: %v\n", client.Reactions)
 
-	fmt.Printf("event: %v\n", env.GithubEvent)
+	fmt.Printf("event: %v\n", event)
 
 	// err = PREvent(client, env, env.GithubEvent)
 	// if err != nil {
@@ -211,4 +218,22 @@ func HasPendingLabel(pr *github.PullRequest) bool {
 		}
 	}
 	return false
+}
+
+func ParsePullRequestEvent(pullRequestEvent string) (*github.PullRequestEvent, error) {
+	// Read the event payload from the file
+	payloadFile, err := os.Open(pullRequestEvent)
+	if err != nil {
+		return nil, err
+	}
+	defer payloadFile.Close()
+
+	// Parse the event payload
+	prEvent := &github.PullRequestEvent{}
+	err = json.NewDecoder(payloadFile).Decode(prEvent)
+	if err != nil {
+		return nil, err
+	}
+
+	return prEvent, nil
 }
