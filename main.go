@@ -161,10 +161,13 @@ func CreateNewLatestReleaseTag(client *github.Client, env initializers.Env, last
 		latestReleaseTag := releaseList[0].GetTagName()
 		latestReleaseTagSplit := strings.Split(latestReleaseTag, ".")
 
-		latestReleaseTagMajorVersion, err := strconv.Atoi(latestReleaseTagSplit[0])
+		latestReleaseTagMajorVersion, err := strconv.Atoi(latestReleaseTagSplit[0][1:])
 		if err != nil {
 			return "", err
 		}
+
+	
+
 		latestReleaseTagMinorVersion, err := strconv.Atoi(latestReleaseTagSplit[1])
 		if err != nil {
 			return "", err
