@@ -7,6 +7,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/MateSousa/create-release-bot/initializers"
 	"github.com/google/go-github/v33/github"
@@ -172,8 +173,19 @@ func CreateNewLatestReleaseTag(client *github.Client, env initializers.Env) (str
 	}
 
 	// Create a new tag
+	now := time.Now()
 	newReleaseTag, _, err := client.Git.CreateTag(context.Background(), env.RepoOwner, env.RepoName, &github.Tag{
-		Tag: &releaseTag,
+		Tag:     &releaseTag,
+		Message: &releaseTag,
+		Object: &github.GitObject{
+			Type: github.String("tag"),
+			SHA:  github.String(""),
+		},
+		Tagger: &github.CommitAuthor{
+			Name:  github.String("Create Release Action"),
+			Email: github.String(""),
+			Date:  &now,
+		},
 	})
 	if err != nil {
 		fmt.Printf("error creating tag: %v", err)
