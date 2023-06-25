@@ -11,7 +11,7 @@ type Env struct {
 	BaseBranch   string `env:"INPUT_BASE_BRANCH"`
 	TargetBranch string `env:"INPUT_TARGET_BRANCH"`
 	Token        string `env:"INPUT_GITHUB_TOKEN"`
-	GithubEvent  string `env:"GITHUB_EVENT_NAME"`
+	GithubEvent  string `env:"GITHUB_EVENT"`
 }
 
 func LoadEnv() (env Env, err error) {
@@ -21,7 +21,7 @@ func LoadEnv() (env Env, err error) {
 		BaseBranch:   os.Getenv("INPUT_BASE_BRANCH"),
 		TargetBranch: os.Getenv("INPUT_TARGET_BRANCH"),
 		Token:        os.Getenv("INPUT_GITHUB_TOKEN"),
-		GithubEvent:  os.Getenv("GITHUB_EVENT_NAME"),
+		GithubEvent:  os.Getenv("GITHUB_EVENT"),
 	}
 
 	// validate config struct
