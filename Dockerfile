@@ -8,14 +8,13 @@ RUN go mod download
 
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o create-release-bot ./cmd/create-release-bot
+RUN CGO_ENABLED=0 go build -o create-release-bot .
 
-FROM alpine:3.14
-
-RUN apk add --no-cache ca-certificates
+FROM gcr.io/distroless/static
 
 COPY --from=builder /app/create-release-bot /usr/local/bin/create-release-bot
 
 ENTRYPOINT ["/usr/local/bin/create-release-bot"]
+
 
 
