@@ -164,9 +164,7 @@ func CreateNewLatestReleaseTag(client *github.Client, env initializers.Env, last
 		latestReleaseTagMajorVersion, err := strconv.Atoi(latestReleaseTagSplit[0][1:])
 		if err != nil {
 			return "", err
-		}
-
-	
+		}	
 
 		latestReleaseTagMinorVersion, err := strconv.Atoi(latestReleaseTagSplit[1])
 		if err != nil {
@@ -183,14 +181,6 @@ func CreateNewLatestReleaseTag(client *github.Client, env initializers.Env, last
 		} else {
 			latestReleaseTagPatchVersion = latestReleaseTagPatchVersion + 1
 		}
-
-		if latestReleaseTagMinorVersion == 9 {
-			latestReleaseTagMajorVersion = latestReleaseTagMajorVersion + 1
-			latestReleaseTagMinorVersion = 0
-		} else {
-			latestReleaseTagMinorVersion = latestReleaseTagMinorVersion + 1
-		}
-
 		if latestReleaseTagMinorVersion == 9 && latestReleaseTagPatchVersion == 9 {
 			latestReleaseTagMajorVersion = latestReleaseTagMajorVersion + 1
 			latestReleaseTagMinorVersion = 0
@@ -210,7 +200,7 @@ func CreateNewLatestReleaseTag(client *github.Client, env initializers.Env, last
 			SHA:  github.String(lastCommitSHA),
 		},
 		Tagger: &github.CommitAuthor{
-			Name:  github.String("Create Release Action"),
+			Name:  github.String("Create Release Bot"),
 			Email: github.String("githubaction@github.com"),
 			Date:  &now,
 		},
