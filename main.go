@@ -19,7 +19,7 @@ const (
 	releaseName    string = "Release "
 )
 
-func prEvent(client *github.Client, env initializers.Env, event *github.PullRequestEvent) error {
+func PREvent(client *github.Client, env initializers.Env, event *github.PullRequestEvent) error {
 	switch *event.Action {
 	case "closed":
 		if *event.PullRequest.Merged {
@@ -77,11 +77,15 @@ func main() {
 		os.Exit(1)
 	}
 
-	err = prEvent(client, env, env.GithubEvent)
-	if err != nil {
-		fmt.Printf("error handling pr event: %v", err)
-		os.Exit(1)
-	}
+	fmt.Printf("repo owner: %v\n", client.Reactions)
+
+	fmt.Printf("event: %v\n", env.GithubEvent)
+
+	// err = PREvent(client, env, env.GithubEvent)
+	// if err != nil {
+	// 	fmt.Printf("error handling pr event: %v", err)
+	// 	os.Exit(1)
+	// }
 	os.Exit(0)
 }
 
