@@ -16,7 +16,6 @@ inputs:
   github_token:
     description: 'GitHub token with repo access'
     required: true
-    default: ${{ github.token }}
   github_event:
     description: 'GitHub event'
     required: true
