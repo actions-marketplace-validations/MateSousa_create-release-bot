@@ -161,15 +161,40 @@ func CreateNewLatestReleaseTag(client *github.Client, env initializers.Env, last
 		latestReleaseTag := releaseList[0].GetTagName()
 		latestReleaseTagSplit := strings.Split(latestReleaseTag, ".")
 
+		latestReleaseTagMajorVersion, err := strconv.Atoi(latestReleaseTagSplit[0])
+		if err != nil {
+			return "", err
+		}
 		latestReleaseTagMinorVersion, err := strconv.Atoi(latestReleaseTagSplit[1])
 		if err != nil {
 			return "", err
 		}
+		latestReleaseTagPatchVersion, err := strconv.Atoi(latestReleaseTagSplit[2])
+		if err != nil {
+			return "", err
+		}
 
-		newReleaseTagMinorVersion := latestReleaseTagMinorVersion + 1
+		if latestReleaseTagPatchVersion == 9 {
+			latestReleaseTagMinorVersion = latestReleaseTagMinorVersion + 1
+			latestReleaseTagPatchVersion = 0
+		} else {
+			latestReleaseTagPatchVersion = latestReleaseTagPatchVersion + 1
+		}
 
-		releaseTag = fmt.Sprintf("v0.%d.0", newReleaseTagMinorVersion)
+		if latestReleaseTagMinorVersion == 9 {
+			latestReleaseTagMajorVersion = latestReleaseTagMajorVersion + 1
+			latestReleaseTagMinorVersion = 0
+		} else {
+			latestReleaseTagMinorVersion = latestReleaseTagMinorVersion + 1
+		}
 
+		if latestReleaseTagMinorVersion == 9 && latestReleaseTagPatchVersion == 9 {
+			latestReleaseTagMajorVersion = latestReleaseTagMajorVersion + 1
+			latestReleaseTagMinorVersion = 0
+			latestReleaseTagPatchVersion = 0
+		}
+
+		releaseTag = fmt.Sprintf("v%d.%d.%d", latestReleaseTagMajorVersion, latestReleaseTagMinorVersion, latestReleaseTagPatchVersion)
 	}
 
 	// Create a new tag
@@ -183,7 +208,7 @@ func CreateNewLatestReleaseTag(client *github.Client, env initializers.Env, last
 		},
 		Tagger: &github.CommitAuthor{
 			Name:  github.String("Create Release Action"),
-			Email: github.String("matessousa@outlook.com"),
+			Email: github.String("githubaction@github.com"),
 			Date:  &now,
 		},
 	})
@@ -238,7 +263,6 @@ func ParsePullRequestEvent(pullRequestEvent string) (*github.PullRequestEvent, e
 	if payloadEnv == "" {
 		return nil, fmt.Errorf("no payload found for event %s", pullRequestEvent)
 	}
-
 
 	// Parse the event payload
 	prEvent := &github.PullRequestEvent{}
