@@ -85,10 +85,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Printf("repo owner: %v\n", client.Reactions)
-
-	fmt.Printf("event: %v\n", event)
-
 	err = PREvent(client, env, event)
 	if err != nil {
 		fmt.Printf("error handling pr event: %v", err)

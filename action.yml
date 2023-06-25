@@ -21,22 +21,12 @@ inputs:
     required: true
     default: ${{ github.event }}
 runs:
-  using: 'composite'
-  steps:
-    - name: 'Set up Go'
-      uses: actions/setup-go@v2
-      with:
-        go-version: '1.20'
-    - name: 'Checkout code'
-      uses: actions/checkout@v3
-    - name: 'Run action'
-      shell: bash
-      run: |
-        go run .
-      env:
-        INPUT_REPO_OWNER: ${{ inputs.repo_owner }}
-        INPUT_REPO_NAME: ${{ inputs.repo_name }}
-        INPUT_BASE_BRANCH: ${{ inputs.base_branch }}
-        INPUT_TARGET_BRANCH: ${{ inputs.target_branch }}
-        INPUT_GITHUB_TOKEN: ${{ inputs.github_token }}
-        INPUT_GITHUB_EVENT: ${{ inputs.github_event }}
+  using: 'docker'
+  image: 'Dockerfile'
+  env:
+    INPUT_REPO_OWNER: ${{ inputs.repo_owner }}
+    INPUT_REPO_NAME: ${{ inputs.repo_name }}
+    INPUT_BASE_BRANCH: ${{ inputs.base_branch }}
+    INPUT_TARGET_BRANCH: ${{ inputs.target_branch }}
+    INPUT_GITHUB_TOKEN: ${{ inputs.github_token }}
+    INPUT_GITHUB_EVENT: ${{ inputs.github_event }}
