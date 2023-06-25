@@ -40,9 +40,6 @@ func LoadEnv() (env Env, err error) {
 	if env.Token == "" {
 		return env, fmt.Errorf("missing github token")
 	}
-	if env.GithubEvent == "" {
-		return env, fmt.Errorf("missing github event")
-	}
 
 	return env, nil
 }
