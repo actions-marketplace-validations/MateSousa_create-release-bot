@@ -1,9 +1,8 @@
 name: Release Workflow
 
 on:
-  push:
-    branches:
-      - master
+  pull_request:
+    types: [closed]
   workflow_dispatch:
 
 jobs:
@@ -19,7 +18,7 @@ jobs:
         uses: MateSousa/create-release-bot@master
         with:
           repo_owner: MateSousa
-          repo_name: create-release
+          repo_name: create-release-bot
           base_branch: master
           target_branch: release
           github_token: ${{ secrets.TOKEN }}
