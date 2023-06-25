@@ -221,16 +221,16 @@ func HasPendingLabel(pr *github.PullRequest) bool {
 }
 
 func ParsePullRequestEvent(pullRequestEvent string) (*github.PullRequestEvent, error) {
-	// Read the event payload from the file
-	payloadFile, err := os.Open(pullRequestEvent)
-	if err != nil {
-		return nil, err
+	// Read the event payload from the env vars
+	payloadEnv := os.Getenv(pullRequestEvent)
+	if payloadEnv == "" {
+		return nil, fmt.Errorf("no payload found for event %s", pullRequestEvent)
 	}
-	defer payloadFile.Close()
+
 
 	// Parse the event payload
 	prEvent := &github.PullRequestEvent{}
-	err = json.NewDecoder(payloadFile).Decode(prEvent)
+	err := json.Unmarshal([]byte(payloadEnv), prEvent)
 	if err != nil {
 		return nil, err
 	}
