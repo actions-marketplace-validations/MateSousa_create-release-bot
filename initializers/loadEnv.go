@@ -12,7 +12,7 @@ type Env struct {
 	BaseBranch   string `env:"INPUT_BASE_BRANCH"`
 	TargetBranch string `env:"INPUT_TARGET_BRANCH"`
 	Token        string `env:"INPUT_GITHUB_TOKEN"`
-	GithubEvent *github.PullRequestEvent
+	GithubEvent  string `env:"GITHUB_EVENT_NAME"`
 }
 
 func LoadEnv() (env Env, err error) {
@@ -22,6 +22,7 @@ func LoadEnv() (env Env, err error) {
 		BaseBranch:   os.Getenv("INPUT_BASE_BRANCH"),
 		TargetBranch: os.Getenv("INPUT_TARGET_BRANCH"),
 		Token:        os.Getenv("INPUT_GITHUB_TOKEN"),
+		GithubEvent:  os.Getenv("GITHUB_EVENT_NAME"),
 	}
 
 	// validate config struct
@@ -39,6 +40,9 @@ func LoadEnv() (env Env, err error) {
 	}
 	if env.Token == "" {
 		return env, fmt.Errorf("missing github token")
+	}
+	if env.GithubEvent == "" {
+		return env, fmt.Errorf("missing github event")
 	}
 
 	return env, nil
