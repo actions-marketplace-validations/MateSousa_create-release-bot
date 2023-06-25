@@ -21,5 +21,5 @@ jobs:
           repo_name: create-release-bot
           base_branch: master
           target_branch: release
-          github_token: ${{ secrets.TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           github_event: ${{ toJson(github.event) }}
