@@ -20,7 +20,6 @@ const (
 )
 
 func prEvent(client *github.Client, env initializers.Env, event *github.PullRequestEvent) error {
-	fmt.Printf("Handling event: %v\n", *event)
 	switch *event.Action {
 	case "closed":
 		if *event.PullRequest.Merged {
