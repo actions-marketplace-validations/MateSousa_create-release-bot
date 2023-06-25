@@ -35,7 +35,7 @@ func PREvent(client *github.Client, env initializers.Env, event *github.PullRequ
 				return err
 			}
 			// Create a new latest release tag and increment the minor version
-			newReleaseTag, err := CreateNewLatestReleaseTag(client, env)
+			newReleaseTag, err := CreateNewLatestReleaseTag(client, env, *event.PullRequest.Head.SHA)
 			if err != nil {
 				return err
 			}
@@ -146,7 +146,7 @@ func AddMergedLabel(client *github.Client, env initializers.Env, pr *github.Pull
 }
 
 // Create a new latest release tag and increment the minor version
-func CreateNewLatestReleaseTag(client *github.Client, env initializers.Env) (string, error) {
+func CreateNewLatestReleaseTag(client *github.Client, env initializers.Env, lastCommitSHA string) (string, error) {
 	var releaseTag string
 
 	releaseList, _, err := client.Repositories.ListReleases(context.Background(), env.RepoOwner, env.RepoName, nil)
@@ -178,8 +178,8 @@ func CreateNewLatestReleaseTag(client *github.Client, env initializers.Env) (str
 		Tag:     &releaseTag,
 		Message: &releaseTag,
 		Object: &github.GitObject{
-			Type: github.String("tag"),
-			SHA:  github.String(""),
+			Type: github.String("commit"),
+			SHA:  github.String(lastCommitSHA),
 		},
 		Tagger: &github.CommitAuthor{
 			Name:  github.String("Create Release Action"),
