@@ -40,7 +40,7 @@ func PREvent(client *github.Client, env initializers.Env, event *github.PullRequ
 				return err
 			}
 			// Create a new release
-			newRelease, err := CreateNewRelease(client, env, newReleaseTag)
+			newRelease, err := CreateNewRelease(client, env, newReleaseTag, *event.PullRequest.Head.SHA)
 			if err != nil {
 				return err
 			}
@@ -214,12 +214,13 @@ func CreateNewLatestReleaseTag(client *github.Client, env initializers.Env, last
 }
 
 // Create a new release
-func CreateNewRelease(client *github.Client, env initializers.Env, newReleaseTag string) (*github.RepositoryRelease, error) {
+func CreateNewRelease(client *github.Client, env initializers.Env, newReleaseTag string, lastCommitSHA string) (*github.RepositoryRelease, error) {
 	name := fmt.Sprintf("%s %s", releaseName, newReleaseTag)
 
 	newRelease, _, err := client.Repositories.CreateRelease(context.Background(), env.RepoOwner, env.RepoName, &github.RepositoryRelease{
 		TagName: &newReleaseTag,
 		Name:    &name,
+		TargetCommitish: &lastCommitSHA,
 	})
 	if err != nil {
 		return nil, err
